@@ -8,7 +8,13 @@ extern unsigned int __bss_end__;
 extern unsigned int __stack;
 
 
-static void _start(void) __attribute__ ((naked, section (".startup_code")));
+static void _start(void) __attribute__ ((naked, section (".start")));
+
+
+unsigned int __boot_exceptions[] __attribute__ ((section (".vec_tbl"), used)) = {
+	[0]=	(unsigned int)&__stack,
+    [1]=	(unsigned int)_start,
+};
 
 
 int __attribute__((weak)) main(void)
@@ -17,7 +23,6 @@ int __attribute__((weak)) main(void)
 		;
 	}
 }
-
 
 
 static void _start(void)

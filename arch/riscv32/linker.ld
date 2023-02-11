@@ -15,7 +15,7 @@ SECTIONS
     	*(.text*)                /* .text* sections (code) */
 		*(.rodata)               /* .rodata sections (constants, strings, etc.) */
     	*(.rodata*)              /* .rodata* sections (constants, strings, etc.) */
-	} > sram
+	} > flash
 
 
 	. = .;

@@ -1,40 +1,39 @@
 MEMORY
 {
-	flash   (rx)  : ORIGIN = 0x00002000, LENGTH = 1M - 8K
-	sram_sec   (rwx) : ORIGIN = 0x20020000, LENGTH = 64K
+	flash   (rx)  : ORIGIN = 0x00000000, LENGTH = 1M
+	sram    (rwx) : ORIGIN = 0x20000000, LENGTH = 256K
 }
 
 
 SECTIONS
 {
-	. = 0x00002000;
-	.vec_tbl . : {
-		*vec_tbl.o(.text);
-	} > flash
-	.start . : {
-		*start.o(.text);
-	} > flash
-
+	. = ORIGIN(flash);
 	.text : {
-		*(.exception);
-		*(.text*);
-	} > flash
-
-	.rodata : {
-		*(.rodata*);
+		. = ALIGN(4);
+    	KEEP(*(.vec_tbl))     	 /* Vector table early in memory*/
+		. = ALIGN(4);
+    	KEEP(*(.start))     	 /* Start up code early in memory*/
+    	*(.text)                 /* .text sections (code) */
+    	*(.text*)                /* .text* sections (code) */
+		*(.rodata)               /* .rodata sections (constants, strings, etc.) */
+    	*(.rodata*)              /* .rodata* sections (constants, strings, etc.) */
 	} > flash
 
 	. = .;
 	. = ALIGN(4);
     __etext = .;
+
 	.data : AT (__etext)
 	{
-		__data_start__ = .;
-		*(.data*);
 		. = ALIGN(4);
-        /* All data end */
-        __data_end__ = .;
-	} > sram_sec
+      	__data_start__ = .;
+      	__data_start = __data_start__;
+      	*(.sdata* .sdata.* .gnu.linkonce.s.*)
+      	*(.data*)
+
+      	. = ALIGN(4);
+      	__data_end__ = .;
+	} > sram
 
 
 	.bss : {
@@ -44,7 +43,7 @@ SECTIONS
 		*(COMMON)
 		. = ALIGN(4);
         __bss_end__ = .;
-	} > sram_sec
+	} > sram
 
-    PROVIDE(__stack = ORIGIN(sram_sec) + LENGTH(sram_sec));
+    PROVIDE(__stack = ORIGIN(sram) + LENGTH(sram));
 }

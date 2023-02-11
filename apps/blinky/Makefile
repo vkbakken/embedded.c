@@ -1,28 +1,36 @@
-TOOLCHAIN_LOC	:= /opt/gcc-arm-none-eabi/8-2018-q4-major/bin
+TOP				:= ../..
+TOOLCHAIN_LOC	:= /opt/gcc-arm-none-eabi/10.3-2021.10/bin
 #TOOLCHAIN_LOC	:= 
-CC				:= riscv32-unknown-elf-gcc
-OBJCOPY         := riscv32-unknown-elf-objcopy
+CC				:= $(TOOLCHAIN_LOC)/arm-none-eabi-gcc
+OBJCOPY         := $(TOOLCHAIN_LOC)/arm-none-eabi-objcopy
+OBJDUMP         := $(TOOLCHAIN_LOC)/arm-none-eabi-objdump
 
-PRJ				:= tinzy_riscv
 
-CFLAGS			:= -march=rv32im -mabi=ilp32  -Wl,--no-relax -fstack-usage
-CFLAGS			+= -g -nostdlib -fshort-enums -fno-builtin-printf -ffreestanding -flto
-CFLAGS			+= 
+PRJ				:= blinky
 
-CFILES			:= boot.c
-CFILES			+= main.c
-CFILES			+= dhrystone.c
-CINC			:= -I /opt/riscv32im/2020-04-14-d8243f7f/riscv32-unknown-elf/include
-CINC			+= -I ./include
-CINC			+= -I ./
+
+CFLAGS			:= -Wall -Os -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
+CFLAGS			+= -g3 -fshort-enums -fno-builtin-printf -ffreestanding -flto -fomit-frame-pointer -fno-dwarf2-cfi-asm -fno-builtin -ffunction-sections -fdata-sections -fshort-enums -fno-common
+CFLAGS			+= -std=gnu99 -nostdlib
+
+CFILES			:= $(TOP)/arch/cortexm/boot.c
+CFILES			+= $(TOP)/arch/cortexm/delay.c
+CFILES			+= $(TOP)/board/nrf52840_dk/init.c
+CFILES			+= $(TOP)/board/nrf52840_dk/led.c
+CFILES			+= blinky.c
+CINC			:= -I /opt/gcc-arm-none-eabi/10.3-2021.10/include
+CINC			+= -I $(TOP)/include
+CINC			+= -I $(TOP)/board/nrf52840_dk/include
+CINC			+= -I $(TOP)/chip/nrf52840/include
+
 
 CFLAGS			+= $(CINC)
-CFLAGS			+= -DDEVICE_ASIC
+CFLAGS			+=
 
 ASMFILES		:=
 ASMFILES		+= 
 
-LDFLAGS			:= -T onio.zero_ram.ld -flto -ffreestanding -nostdlib -fstack-usage
+LDFLAGS			:= -T $(TOP)/arch/cortexm/linker.ld -flto -ffreestanding -nostdlib -fstack-usage
 #LDFLAGS			+= -L ./nrfxlib/bsdlib/lib/cortex-m33/soft-float/ -lbsd_nrf9160_xxaa
 #LDFLAGS			+= -L ./nrfxlib/crypto/nrf_oberon/lib/cortex-m33/soft-float/ -loberon_3.0.2
 
@@ -33,7 +41,8 @@ all: ver $(PRJ).elf hex
 
 
 clean:
-	rm -f *.hex *.elf *.o *.lst
+	rm -f $(OBJ)
+	rm -f *.hex *.elf *.o *.lst *.map
 
 ver:
 	$(CC) --version
@@ -53,4 +62,4 @@ hex:
 # elf file
 $(PRJ).elf: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) --output $@ $(LDFLAGS) -Xlinker -Map=output.map
-	riscv32-unknown-elf-objdump -h -S $(PRJ).elf > $(PRJ).lst
+	$(OBJDUMP) -h -S $(PRJ).elf > $(PRJ).lst
