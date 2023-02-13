@@ -1,9 +1,9 @@
 TOP				:= ../..
-TOOLCHAIN_LOC	:= /opt/gcc-arm-none-eabi/10.3-2021.10/bin
-#TOOLCHAIN_LOC	:= 
-CC				:= $(TOOLCHAIN_LOC)/arm-none-eabi-gcc
-OBJCOPY         := $(TOOLCHAIN_LOC)/arm-none-eabi-objcopy
-OBJDUMP         := $(TOOLCHAIN_LOC)/arm-none-eabi-objdump
+#TOOLCHAIN_LOC	:= /opt/gcc-arm-none-eabi/10.3-2021.10/bin/
+TOOLCHAIN_LOC	:= 
+CC				:= $(TOOLCHAIN_LOC)arm-none-eabi-gcc
+OBJCOPY         := $(TOOLCHAIN_LOC)arm-none-eabi-objcopy
+OBJDUMP         := $(TOOLCHAIN_LOC)arm-none-eabi-objdump
 
 
 PRJ				:= blinky

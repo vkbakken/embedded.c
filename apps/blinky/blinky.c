@@ -11,8 +11,8 @@ int main(void)
     board_init();
     while (true) {
         board_led_off(0);
-        for (uint32_t i = 0; i < 32000000; ++i) { ; }
+        mdelay(1000);
         board_led_on(0);
-        for (uint32_t i = 0; i < 32000000; ++i) { ; }
+        mdelay(1000);
     }
 }
