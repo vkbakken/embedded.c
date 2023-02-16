@@ -1,9 +1,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <board/init.h>
-#include <board/led.h>
+
 #include <delay.h>
+#include <init.h>
+#include <led.h>
 
 
 int main(void)
@@ -15,4 +16,6 @@ int main(void)
         board_led_on(0);
         mdelay(1000);
     }
+
+    return 0;
 }
