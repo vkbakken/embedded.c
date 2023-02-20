@@ -6,7 +6,7 @@ OBJCOPY         := $(TOOLCHAIN_LOC)arm-none-eabi-objcopy
 OBJDUMP         := $(TOOLCHAIN_LOC)arm-none-eabi-objdump
 
 
-PRJ				:= blinky
+PRJ				:= debug
 
 
 CFLAGS			:= -Wall -Os -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
