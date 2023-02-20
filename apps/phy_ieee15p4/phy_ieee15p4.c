@@ -2,14 +2,14 @@
 #include <stdbool.h>
 
 
-#include <debug.h>
+#include <console.h>
 #include <init.h>
 
 
 int main(void)
 {
     board_init();
-    dbg_init();
+    console_init();
 
     dbg_panic("Console panic\r\n");
     dbg_error("Console error\r\n");
@@ -19,6 +19,7 @@ int main(void)
 
     
     while (true) {
+        console_realine();
     }
 
     return 0;
