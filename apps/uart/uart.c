@@ -1,25 +1,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
-#include <console.h>
 #include <init.h>
+#include <uart.h>
+
+
+#define DEBUG_UART          CONFIG_DEBUG_UART
 
 
 int main(void)
 {
     board_init();
-    console_init();
 
-    dbg_panic("Console panic\r\n");
-    dbg_error("Console error\r\n");
-    dbg_warning("Console warning\r\n");
-    dbg_info("Console info\r\n");
-    dbg_verbose("Console verbose\r\n");
-
+    uart_ctrl_init_defaults(DEBUG_UART);
+	uart_enable(DEBUG_UART, UART_FLAG_TX | UART_FLAG_TX);
     
     while (true) {
-        console_realine();
+        uart_put_byte_priv(0, 'O');
     }
 
     return 0;

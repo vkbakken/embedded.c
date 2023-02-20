@@ -10,6 +10,8 @@
 # include <uart/ctrl_posix.h>
 #endif
 
-void uart_ctrl_init_defaults(void *uart);
-void uart_enable(void *uart, unsigned int flags);
+void uart_ctrl_init_defaults(uint8_t id);
+void uart_enable(uint8_t id, unsigned int flags);
+
+bool uart_put_byte_priv(uint8_t id, uint8_t data);
 #endif /*CTRL_UART_H_INCLUDED*/

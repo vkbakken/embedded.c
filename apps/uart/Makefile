@@ -1,75 +1,66 @@
 TOP				:= ../..
 #TOOLCHAIN_LOC	:= /opt/gcc-arm-none-eabi/10.3-2021.10/bin/
 TOOLCHAIN_LOC	:= 
-#CC				:= $(TOOLCHAIN_LOC)arm-none-eabi-gcc
-#OBJCOPY         := $(TOOLCHAIN_LOC)arm-none-eabi-objcopy
-#OBJDUMP         := $(TOOLCHAIN_LOC)arm-none-eabi-objdump
+CC				:= $(TOOLCHAIN_LOC)arm-none-eabi-gcc
+OBJCOPY         := $(TOOLCHAIN_LOC)arm-none-eabi-objcopy
+OBJDUMP         := $(TOOLCHAIN_LOC)arm-none-eabi-objdump
 
 
-CC				:= gcc
-OBJCOPY         := objcopy
-OBJDUMP         := objdump
+PRJ				:= uart
 
 
-PRJ				:= console
-
-
-#CFLAGS			:= -Wall -Os -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
+CFLAGS			:= -Wall -Os -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
 CFLAGS			+= -g3 -fshort-enums -fno-builtin-printf -ffreestanding -flto -fomit-frame-pointer -fno-dwarf2-cfi-asm -fno-builtin -ffunction-sections -fdata-sections -fshort-enums -fno-common
-CFLAGS			+= -std=gnu99
+CFLAGS			+= -std=gnu99 -nostdlib
 
-CFLAGS			+= -DCONFIG_ARCH_POSIX
-CFLAGS			+= -DCONFIG_DEBUG_CONSOLE
-CFLAGS			+= -DCONFIG_DEBUG_UART_ID=0
-
-
-CFILES			:=
-#CFILES			+= $(TOP)/arch/cortexm/boot.c
-#CFILES			+= $(TOP)/arch/cortexm/delay.c
-CFILES			+= $(TOP)/board/pc/init.c
-CFILES			+= $(TOP)/board/pc/led.c
-CFILES			+= $(TOP)/drivers/serial/uart/console_uart.c
-CFILES			+= $(TOP)/drivers/serial/uart/posix.c
-CFILES			+= $(TOP)/utils/generic/generic_memcpy.c
-CFILES			+= $(TOP)/utils/generic/generic_strlen.c
-CFILES			+= $(TOP)/utils/stream/console.c
-CFILES			+= $(TOP)/utils/stream/core.c
-CFILES			+= console.c
-CINC			:= 
-#CINC			:= -I /opt/gcc-arm-none-eabi/10.3-2021.10/include
+CFILES			:= $(TOP)/arch/cortexm/boot.c
+CFILES			+= $(TOP)/arch/cortexm/delay.c
+CFILES			+= $(TOP)/board/nrf52840_dk/init.c
+CFILES			+= $(TOP)/board/nrf52840_dk/led.c
+CFILES			+= $(TOP)/drivers/serial/uart/nrf52_ctrl.c
+CFILES			+= uart.c
+CINC			:= -I /opt/gcc-arm-none-eabi/10.3-2021.10/include
 CINC			+= -I $(TOP)/include
-CINC			+= -I $(TOP)/arch/posix/include
-CINC			+= -I $(TOP)/board/pc/include
+CINC			+= -I $(TOP)/arch/cortexm/include
+CINC			+= -I $(TOP)/board/nrf52840_dk/include
 CINC			+= -I $(TOP)/chip/nrf52840/include
 
 
 CFLAGS			+= $(CINC)
-CFLAGS			+=
+CFLAGS			+= -DCONFIG_DEBUG_UART=0
 
 ASMFILES		:=
 ASMFILES		+= 
 
-LDFLAGS			:=
-#LDFLAGS			+= -T $(TOP)/arch/cortexm/linker.ld
-#LDFLAGS			+= -flto -ffreestanding -nostdlib -fstack-usage
-#LDFLAGS			+= -L ./nrfxlib/bsdlib/lib/cortex-m33/soft-float/ -lbsd_nrf9160_xxaa
-#LDFLAGS			+= -L ./nrfxlib/crypto/nrf_oberon/lib/cortex-m33/soft-float/ -loberon_3.0.2
+LDFLAGS			:= -T $(TOP)/arch/cortexm/linker.ld -flto -ffreestanding -nostdlib -fstack-usage
+
 
 OBJ       		= $(ASMFILES:.S=.o) $(CFILES:.c=.o) $(EXTC:.c=.o) $(CPPFILES:.cpp=.o) $(EXTCPP:.cpp=.o)
 
 
-all: ver $(PRJ).elf hex
+all: ver $(PRJ).elf hex bin
 
 
 clean:
 	rm -f $(OBJ)
-	rm -f *.hex *.elf *.o *.lst *.map
+	rm -f *.hex *.elf *.o *.lst *.map *.bin
 
 ver:
 	$(CC) --version
 
+
 hex:
 	$(OBJCOPY) -O ihex $(PRJ).elf $(PRJ).hex
+
+
+bin:
+	$(OBJCOPY) -O binary $(PRJ).elf $(PRJ).bin
+
+
+program: $(PRJ).bin
+	echo "r\nh\nloadbin $(PRJ).bin 0\nr\nexit\n" |\
+	JLinkExe -device nrf52840 -autoconnect 1 -if SWD -speed 4000
+
 
 # objects from asm files
 .s.o:
