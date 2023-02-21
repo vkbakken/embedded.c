@@ -17,6 +17,8 @@ unsigned int __boot_exceptions[] __attribute__ ((section (".vec_tbl"), used)) = 
 };
 
 
+extern int main(void);
+
 int __attribute__((weak)) main(void)
 {
 	while (1) {

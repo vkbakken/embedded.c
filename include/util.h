@@ -25,4 +25,7 @@ __always_inline static bool is_power_of_two(unsigned long x)
 	: (sizeof(a) <= 2) && (sizeof(b) <= 2) ? compiler_min_u16(a, b) \
 	: (sizeof(a) <= 4) && (sizeof(b) <= 4) ? compiler_min_u32(a, b) \
 	: compiler_min_u64(a, b))
+
+
+#define div_ceil(a, b)	(((a) + (b) - 1) / (b))
 #endif /*UTIL_H_INCLUDED*/

@@ -43,17 +43,19 @@ void uart_enable(uint8_t id, unsigned int flags)
 {
     NRF_UART_Type *uart = (NRF_UART_Type *)id_to_address(id);
 
+    uart->ENABLE = 0x4;
+
     if (flags & UART_FLAG_RX) {
         uart->TASKS_STARTRX = 0x1;
         //uart->EVENTS_ENDRX = 0;
     }
     
     if (flags & UART_FLAG_TX) {
-        uart->EVENTS_TXDRDY = 0;
+        uart->EVENTS_TXDRDY = 0x1;
         uart->TASKS_STARTTX = 0x1;
     }
 
-    uart->ENABLE = 0x4;
+    uart->TXD = 0x00;
 }
 
 

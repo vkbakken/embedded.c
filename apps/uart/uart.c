@@ -1,7 +1,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include <delay.h>
 #include <init.h>
+#include <led.h>
 #include <uart.h>
 
 
@@ -16,7 +18,12 @@ int main(void)
 	uart_enable(DEBUG_UART, UART_FLAG_TX | UART_FLAG_TX);
     
     while (true) {
-        uart_put_byte_priv(0, 'O');
+        board_led_off(0);
+        uart_put_byte(0, 'O');
+        mdelay(1000);
+        board_led_on(0);
+        uart_put_byte(0, 'o');
+        mdelay(1000);
     }
 
     return 0;

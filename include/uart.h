@@ -7,6 +7,10 @@
 #include <uart/ctrl.h>
 
 
+#define uart_put_byte(uart_id, data)\
+	uart_put_byte_priv(uart_id, data)
+
+
 #define uart_put_string(uart_id, data)					\
 	do {								\
 		unsigned int i;						\

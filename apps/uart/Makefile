@@ -9,7 +9,7 @@ OBJDUMP         := $(TOOLCHAIN_LOC)arm-none-eabi-objdump
 PRJ				:= uart
 
 
-CFLAGS			:= -Wall -Os -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
+CFLAGS			:= -Wall -O1 -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
 CFLAGS			+= -g3 -fshort-enums -fno-builtin-printf -ffreestanding -flto -fomit-frame-pointer -fno-dwarf2-cfi-asm -fno-builtin -ffunction-sections -fdata-sections -fshort-enums -fno-common
 CFLAGS			+= -std=gnu99 -nostdlib
 
@@ -33,6 +33,7 @@ ASMFILES		:=
 ASMFILES		+= 
 
 LDFLAGS			:= -T $(TOP)/arch/cortexm/linker.ld -flto -ffreestanding -nostdlib -fstack-usage
+LDFLAGS			+= -g3
 
 
 OBJ       		= $(ASMFILES:.S=.o) $(CFILES:.c=.o) $(EXTC:.c=.o) $(CPPFILES:.cpp=.o) $(EXTCPP:.cpp=.o)
@@ -59,7 +60,7 @@ bin:
 
 program: $(PRJ).bin
 	echo "r\nh\nloadbin $(PRJ).bin 0\nr\nexit\n" |\
-	JLinkExe -device nrf52840 -autoconnect 1 -if SWD -speed 4000
+	JLinkExe -device NRF52840_XXAA -autoconnect 1 -if SWD -speed 4000
 
 
 # objects from asm files

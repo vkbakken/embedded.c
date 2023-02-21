@@ -1,0 +1,6 @@
+#ifndef UART_NRF52_H_INCLUDED
+#define UART_NRF52_H_INCLUDED
+
+
+
+#endif /*UART_NRF52_H_INCLUDED*/
