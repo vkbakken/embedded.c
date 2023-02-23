@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include <arch/irq.h>
 #include <delay.h>
 #include <init.h>
 #include <led.h>
@@ -8,6 +9,16 @@
 
 
 #define DEBUG_UART          CONFIG_DEBUG_UART
+
+
+
+INTC_DEFINE_HANDLER(20, test_entry);
+
+
+void test_entry(void)
+{
+    while (1) { ;}
+}
 
 
 int main(void)

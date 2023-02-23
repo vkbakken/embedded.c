@@ -10,7 +10,7 @@ PRJ				:= uart
 
 
 CFLAGS			:= -Wall -O1 -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=soft -mthumb -mtp=soft -munaligned-access
-CFLAGS			+= -g3 -fshort-enums -fno-builtin-printf -ffreestanding -flto -fomit-frame-pointer -fno-dwarf2-cfi-asm -fno-builtin -ffunction-sections -fdata-sections -fshort-enums -fno-common
+CFLAGS			+= -g3 -fshort-enums -fno-builtin-printf -ffreestanding -fomit-frame-pointer -fno-dwarf2-cfi-asm -fno-builtin -ffunction-sections -fdata-sections -fshort-enums -fno-common
 CFLAGS			+= -std=gnu99 -nostdlib
 
 CFILES			:= $(TOP)/arch/cortexm/boot.c
